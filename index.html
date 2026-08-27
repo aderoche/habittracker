@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Patrick+Hand&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <title>Habit Tracker</title>
+
+    <style>
+
+        body {
+            background-image: url("habittrackerbd5.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: "Space Grotesk", sans-serif;
+        }
+
+        h1 {
+           color: white;
+        }
+
+       .habit-card {
+            width: 350px;
+            padding: 25px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 55px;
+            border-color: black;
+
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            z-index: 1001;
+        }
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+        }
+        h2 {
+            color: black;
+            text-align: center;
+        }
+        #habit-name,
+        #habit-notes,
+        #habit-reminder {
+            border: 1px solid #ccc;
+            border-radius: 999px;
+            padding: 10px 16px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        #habit-notes {
+            resize: none;
+            height: 42px;
+        }
+
+        .habit-card input,
+        .habit-card textarea,
+        .habit-card select {
+            box-sizing: border-box;
+            padding: 8px;
+            margin-top: 10px;
+        }
+        .habit-card input[type="text"],
+        .habit-card textarea {
+            width: 100%;
+        }
+        .color-palette {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .saved-habit {
+            width: 300px;
+            padding: 20px;
+            margin: 20px auto;
+            border: 2px solid;
+            border-radius: 12px;
+            background-color: white;
+            position: relative;
+        }
+        .complete-habit {
+            position: absolute;
+            top: 12px;
+            left: 16px;
+
+            width: 30px;
+            height: 30px;
+
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            background: white;
+
+            color: transparent;
+            cursor: pointer;
+            padding: 0;
+
+            transition: transform 0.15s ease;
+        }
+
+        .complete-habit:hover {
+            transform: scale(1.1);
+        }
+
+        .complete-habit.completed {
+            background: #333;
+            border-color: #333;
+            color: white;
+        }
+        .color-palette {
+        display: flex;
+        gap: 10px;
+        margin: 10px 0;
+        }
+
+       .color-option {
+            width: 35px;
+            height: 35px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.15s ease, border 0.15s ease;
+        }
+        
+        .color-option:hover {
+            transform: scale(1.15);
+}
+
+        .color-option.selected {
+            transform: scale(1.15);
+            border: 3px solid rgba(211, 202, 202, 0.767);
+        }
+
+        .color-option:nth-child(1) {
+            background-color: #e63946;
+        }
+
+        .color-option:nth-child(2) {
+            background-color: #f4a261;
+        }
+
+        .color-option:nth-child(3) {
+            background-color: #e9c46a;
+        }
+
+        .color-option:nth-child(4) {
+            background-color: #2a9d8f;
+        }
+
+        .color-option:nth-child(5) {
+            background-color: #457b9d;
+        }
+
+        .color-option:nth-child(6) {
+            background-color: #7b2cbf;
+        }
+ #add-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: inherit;
+}
+
+#add-button.top-right {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    margin: 0;
+    z-index: 1000;
+}
+       #empty-state {
+        text-align: center;
+        margin-top: 400px;
+    }
+    #empty-state #add-button {
+        margin: 20px auto;
+    }
+        .emoji-palette {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .emoji-option {
+            font-size: 24px;
+            padding: 8px;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            background: none;
+            cursor: pointer;
+            transition: transform 0.15s ease, border 0.15s ease;
+        }
+
+        .emoji-option:hover {
+            transform: scale(1.15);
+        }
+
+        .emoji-option.selected {
+            transform: scale(1.15);
+            border: 2px solid black;
+        }
+        #habit-category {
+            display: block;
+            margin: 15px auto;
+            
+            padding: 10px 16px;
+            border: 1px solid #ccc;
+            border-radius: 999px;
+            cursor: pointer;
+            background: white;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .target-options {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .target-option {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.15s ease, border 0.15s ease;
+        }
+
+        .target-option:hover {
+            transform: scale(1.15);
+        }
+
+        .target-option.selected {
+            transform: scale(1.15);
+            border: 2px solid black;
+        }
+        #close-habit {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
+            line-height: 1;
+
+            transition: transform 0.15s ease;
+        }
+
+        #close-habit:hover {
+            transform: scale(1.2);
+        }
+        #complete-habit {
+            position: absolute;
+            top: 12px;
+            left: 16px;
+
+            width: 28px;
+            height: 28px;
+
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            background: white;
+
+            cursor: pointer;
+            font-size: 16px;
+            color: transparent;
+
+            transition: transform 0.15s ease, background-color 0.15s ease;
+        }
+        #complete-habit:hover {
+            transform: scale(1.1);
+        }
+        #complete-habit.completed {
+            color: white;
+            background-color: #333;
+            border-color: #333;
+                }
+
+    .habit-row {
+        max-width: 600px;
+        margin: 25px auto;
+        padding: 20px;
+        border-radius: 16px;
+        background: white;
+        color: #222;
+        opacity: 70%;
+    }
+
+    .habit-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .habit-header h2 {
+        margin: 0;
+    }
+
+    .habit-icon {
+        font-size: 28px;
+    }
+
+    .week-days,
+    .completion-days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        text-align: center;
+        max-width: 400px;
+        margin: 15px auto 0;
+    }
+  .completion-days button {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+
+    border: 3px solid #f0e8e8;
+    border-radius: 50%;
+
+    background-color: #ddddddd2;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+
+    display: block;
+    justify-self: center;
+
+    transition: transform 0.15s ease;
+}
+
+.completion-days button:hover {
+    transform: scale(1.15);
+}
+
+.completion-days button.completed {
+    background-color: var(--habit-color);
+    border-color: var(--habit-color);
+}
+    .week-days {
+        color: #777;
+    }
+
+    .progress {
+        text-align: center;
+        margin-top: 12px;
+        color: #777;
+    }
+    .habit-notes {
+        text-align: center;
+        color: #777;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+.habit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.habit-actions button {
+    border: none;
+    background: none;
+    padding: 4px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.habit-actions button:hover {
+    transform: scale(1.2);
+}
+
+#save-habit {
+    display: block;
+    margin: 15px auto 0;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 999px;
+    background: #222;
+    color: white;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+#save-habit:hover {
+    transform: scale(1.05);
+    background-color: #444;
+}
+
+#save-habit:active {
+    transform: scale(0.98);
+}
+#habit-name,
+#habit-notes,
+#habit-reminder,
+#habit-reminder-day {
+    border: 1px solid #ccc;
+    border-radius: 999px;
+    padding: 10px 16px;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-family: inherit;
+}
+#habit-reminder-day,
+#habit-reminder {
+    margin-top: 10px;
+}
+.habit-reminder {
+    text-align: center;
+    margin: 8px 0;
+    color: #666;
+    font-size: 14px;
+}
+.reminder-days {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.reminder-day {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.reminder-day:hover {
+    transform: scale(1.1);
+}
+
+.reminder-day.selected {
+    background: #333;
+    border-color: #333;
+    color: white;
+}
+#habit-reminder {
+    display: block;
+    margin: 10px auto;
+}
+.week-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    margin: 30px auto;
+    color: white;
+}
+
+.week-navigation button {
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 22px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.week-navigation button:hover {
+    transform: scale(1.1);
+}
+
+#week-label {
+    min-width: 150px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+#week-navigation.hidden {
+    display: none;
+}
+.data-buttons {
+    display: flex;
+    gap: 8px;
+    margin: 30px 0 20px 20px;
+}
+
+.data-buttons button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.data-buttons button:hover {
+    transform: scale(1.05);
+}
+
+.data-buttons.empty {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    margin: 0;
+}
+    </style>
+
+</head>
+<body>
+
+
+<div id="empty-state">
+    <h1>Track your first habit.</h1>
+</div>
+<button id="add-button">+ Add Habit</button>
+<div id="week-navigation" class="week-navigation">
+    <button id="previous-week" type="button">←</button>
+    <span id="week-label"></span>
+    <button id="next-week" type="button">→</button>
+</div>
+
+<div id="habit-list"></div>
+
+<div class="data-buttons">
+    <button id="export-button">Export Data</button>
+    <button id="import-button">Import Data</button>
+    <input type="file" id="import-file" accept=".json" hidden>
+</div>
+
+<script type="module" src="js/script.js"></script>
+
+</body>
+</html>
