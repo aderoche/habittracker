@@ -307,3 +307,29 @@ if ("serviceWorker" in navigator) {
         });
 
 }
+
+
+
+setTimeout(function() {
+
+    if ("Notification" in window) {
+
+        if (Notification.permission === "granted") {
+
+            new Notification("Test Notification 🔔", {
+                body: "If you can see this, notifications work!"
+            });
+
+        } else {
+
+            console.log("Notification permission:", Notification.permission);
+
+        }
+
+    } else {
+
+        console.log("Notifications are not supported.");
+
+    }
+
+}, 3000);
