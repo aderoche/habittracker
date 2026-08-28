@@ -2,6 +2,8 @@ export function checkReminders(habits) {
 
     const now = new Date();
 
+    console.log("Reminder check:", now);
+
     const currentDay =
         now.toLocaleDateString("en-US", {
             weekday: "long"
@@ -10,6 +12,8 @@ export function checkReminders(habits) {
     const currentTime =
         now.toTimeString().slice(0, 5);
 
+    console.log("Day:", currentDay);
+    console.log("Time:", currentTime);
 
     habits.forEach(function(habit) {
 
