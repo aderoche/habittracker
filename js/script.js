@@ -289,47 +289,4 @@ importFile.addEventListener("change", function() {
 
 });
 
-if ("serviceWorker" in navigator) {
 
-    navigator.serviceWorker.register("./sw.js")
-        .then(function() {
-
-            console.log("Service worker registered.");
-
-        })
-        .catch(function(error) {
-
-            console.error(
-                "Service worker registration failed:",
-                error
-            );
-
-        });
-
-}
-
-
-
-setTimeout(function() {
-
-    if ("Notification" in window) {
-
-        if (Notification.permission === "granted") {
-
-            new Notification("Test Notification 🔔", {
-                body: "If you can see this, notifications work!"
-            });
-
-        } else {
-
-            console.log("Notification permission:", Notification.permission);
-
-        }
-
-    } else {
-
-        console.log("Notifications are not supported.");
-
-    }
-
-}, 3000);

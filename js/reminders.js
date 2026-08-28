@@ -47,12 +47,23 @@ function sendReminder(habit, currentDay) {
 
 
     if (
-        "Notification" in window &&
+        "serviceWorker" in navigator &&
         Notification.permission === "granted"
     ) {
 
-        new Notification("Habit Reminder 🔔", {
-            body: `${habit.emoji} ${habit.name}`
+        navigator.serviceWorker.ready.then(function(registration) {
+
+            registration.active.postMessage({
+
+                type: "REMINDER",
+
+                habit: {
+                    name: habit.name,
+                    emoji: habit.emoji
+                }
+
+            });
+
         });
 
         localStorage.setItem(
